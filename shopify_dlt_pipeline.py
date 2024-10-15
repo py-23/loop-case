@@ -7,7 +7,7 @@ from typing import List, Tuple
 from shopify_dlt import shopify_source, TAnyDateTime, shopify_partner_query
 
 
-def load_all_resources(resources: str, start_date: TAnyDateTime) -> None:
+def load_all_resources(start_date: TAnyDateTime) -> None:
     """Execute a pipeline that will load the given Shopify resources incrementally beginning at the given start date.
     Subsequent runs will load only items updated since the previous run.
     """
@@ -18,13 +18,12 @@ def load_all_resources(resources: str, start_date: TAnyDateTime) -> None:
         dataset_name="shopify_data"
     )
     load_info = pipeline.run(
-        shopify_source(start_date=start_date,
-                       shop_url = resources).with_resources("orders", "products", "customers")
+        shopify_source(start_date=start_date).with_resources("orders", "products", "customers")
     )
     print(load_info)
 
 
-def incremental_load_with_backloading(resources) -> None:
+def incremental_load_with_backloading() -> None:
     """Load past orders from Shopify in chunks of 1 week each using the start_date and end_date parameters.
     This can useful to reduce the potiential failure window when loading large amounts of historic data.
     Chunks and incremental load can also be run in parallel to speed up the initial load.
@@ -56,8 +55,7 @@ def incremental_load_with_backloading(resources) -> None:
         data = shopify_source(
             start_date=start_date,
             end_date=end_date,
-            created_at_min=min_start_date,
-            shop_url = resources).with_resources("orders", "products", "customers")
+            created_at_min=min_start_date).with_resources("orders", "products", "customers")
 
         load_info = pipeline.run(data)
         print(load_info)
@@ -67,8 +65,7 @@ def incremental_load_with_backloading(resources) -> None:
     load_info = pipeline.run(
         shopify_source(
             start_date=max_end_date,
-            created_at_min=min_start_date,
-            shop_url = resources).with_resources("orders", "products", "customers")
+            created_at_min=min_start_date).with_resources("orders", "products", "customers")
     )
     print(load_info)
 
@@ -115,11 +112,8 @@ def load_partner_api_transactions() -> None:
 
 
 if __name__ == "__main__":
-    # Add your desired resources to the list...
-    resources = "https://loopcasestore.myshopify.com/admin/api/2023-10/orders.json"
-
     # load_all_resources(resources, start_date="2024-01-01")
 
-    incremental_load_with_backloading(resources)
+    incremental_load_with_backloading()
 
     # load_partner_api_transactions()

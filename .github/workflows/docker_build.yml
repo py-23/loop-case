@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,6 +64,7 @@ jobs:
           gcloud run jobs deploy dlt-ingest-shopify-job \
             --image gcr.io/${GCP_PROJECT_ID}/dlt-shopify-ingest-image:latest \
             --region europe-west1 \
-            --set-env-vars GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }} \
+            --set-env-vars GCP_PROJECT_ID=${GCP_PROJECT_ID} \
             --tasks 1 \
+            --project ${GCP_PROJECT_ID} \
             --execute-now --wait

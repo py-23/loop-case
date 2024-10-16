@@ -60,7 +60,6 @@ jobs:
           sed -i "s|access_token = \"\"|access_token = \"${ACCESS_TOKEN}\"|" .dlt/secrets.toml
           sed -i "s|client_email = \"\"|client_email = \"${CLIENT_EMAIL}\"|" .dlt/secrets.toml
           # Properly insert the GCP private key, ensuring newlines are correctly formatted
-          PRIVATE_KEY_ESCAPED=$(echo "${PRIVATE_KEY}" | sed ':a;N;$!ba;s/\n/\\n/g')
           sed -i "s|private_key = \"\"|private_key = \"${PRIVATE_KEY_ESCAPED}\"|" .dlt/secrets.toml
           # Display the contents of secrets.toml to verify updates
           echo "Contents of secrets.toml after update:"

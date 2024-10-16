@@ -62,6 +62,9 @@ jobs:
           # Properly insert the GCP private key, ensuring newlines are correctly formatted
           PRIVATE_KEY_ESCAPED=$(echo "${PRIVATE_KEY}" | sed ':a;N;$!ba;s/\n/\\n/g')
           sed -i "s|private_key = \"\"|private_key = \"${PRIVATE_KEY_ESCAPED}\"|" .dlt/secrets.toml
+          # Display the contents of secrets.toml to verify updates
+          echo "Contents of secrets.toml after update:"
+          cat .dlt/secrets.toml
 
       # Step 8: Build and Push Docker image
       - name: Build and Push Docker image

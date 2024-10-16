@@ -63,9 +63,6 @@ jobs:
           sed -i '/private_key = ""/d' .dlt/secrets.toml
           
           printf 'private_key = "%s"\n' "${PRIVATE_KEY}" >> .dlt/secrets.toml
-          
-          echo "Contents of secrets.toml after update:"
-          cat .dlt/secrets.toml
 
       # Step 8: Build and Push Docker image
       - name: Build and Push Docker image

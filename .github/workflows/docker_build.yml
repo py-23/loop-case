@@ -46,8 +46,24 @@ jobs:
           echo "${GCP_SA_KEY}" > /tmp/key.json
           gcloud auth activate-service-account --key-file=/tmp/key.json
           gcloud auth configure-docker
+          
 
-      # Step 7: Build and Push Docker image
+      # Step 7: Replace placeholders in secrets.toml with actual secrets
+      - name: Update secrets.toml with GitHub Secrets
+        env:
+          PRIVATE_APP_PASSWORD: ${{ secrets.PRIVATE_APP_PASSWORD }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          sed -i "s|private_app_password = \"\"|private_app_password = \"${PRIVATE_APP_PASSWORD}\"|" .dlt/secrets.toml
+          sed -i "s|access_token = \"\"|access_token = \"${ACCESS_TOKEN}\"|" .dlt/secrets.toml
+          sed -i "s|project_id = \"\"|project_id = \"${GCP_PROJECT_ID}\"|" .dlt/secrets.toml
+          sed -i "s|private_key = \"\"|private_key = \"${PRIVATE_KEY}\"|" .dlt/secrets.toml
+          sed -i "s|client_email = \"\"|client_email = \"${CLIENT_EMAIL}\"|" .dlt/secrets.toml
+
+      # Step 8: Build and Push Docker image
       - name: Build and Push Docker image
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
@@ -56,17 +72,14 @@ jobs:
                               --cache-to=type=local,dest=/tmp/.buildx-cache \
                               --push -t gcr.io/${GCP_PROJECT_ID}/dlt-shopify-ingest-image:latest .
 
-      # Step 8: Deploy to Google Cloud Run Job
+      # Step 9: Deploy to Google Cloud Run Job
       - name: Deploy to Cloud Run Job
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          PRIVATE_APP_PASSWORD: ${{ secrets.PRIVATE_APP_PASSWORD }}
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
           gcloud run jobs deploy dlt-ingest-shopify-job \
             --image gcr.io/${GCP_PROJECT_ID}/dlt-shopify-ingest-image:latest \
             --region europe-west1 \
-            --set-env-vars PRIVATE_APP_PASSWORD=${PRIVATE_APP_PASSWORD},ACCESS_TOKEN=${ACCESS_TOKEN},GCP_PROJECT_ID=${GCP_PROJECT_ID} \
             --tasks 1 \
             --project ${GCP_PROJECT_ID} \
             --execute-now --wait

@@ -13,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out the repository
+      # Step 1: Check out the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Docker Buildx (for multi-platform builds and caching)
+      # Step 2: Set up Docker Buildx (for multi-platform builds and caching)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Cache Docker layers (optional but speeds up build time)
+      # Step 3: Cache Docker layers (optional but speeds up build time)
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -30,7 +30,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      # Log in to Google Cloud (Google Container Registry)
+      # Step 4: Authenticate to GCR (if using Google Container Registry)
       - name: Authenticate to GCR
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
@@ -39,22 +39,27 @@ jobs:
           gcloud auth activate-service-account --key-file=/tmp/key.json
           gcloud auth configure-docker
 
+      # Step 5: Build the Docker image
       - name: Build Docker image
         run: |
           docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
                               --cache-to=type=local,dest=/tmp/.buildx-cache \
                               -t my-image:latest .
 
-      - name: Run Docker container (set credentials at runtime)
-        run: |
-          docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json \
-                     -v /tmp/key.json:/tmp/key.json my-image:latest
-
-
-      # Push Docker image
+      # Step 6: Push Docker image to GCR (modify for your use case)
       - name: Push Docker image to GCR
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
           docker tag my-image:latest gcr.io/${GCP_PROJECT_ID}/my-image:latest
           docker push gcr.io/${GCP_PROJECT_ID}/my-image:latest
+
+      # Step 7: Run the container and set environment variables at runtime
+      - name: Run Docker container (set credentials at runtime)
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          # Create the credentials file in the container
+          echo "${GCP_SA_KEY}" > /tmp/key.json
+          docker run -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json \
+                     -v /tmp/key.json:/app/gcp_credentials.json my-image:latest

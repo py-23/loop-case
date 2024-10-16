@@ -72,10 +72,16 @@ jobs:
       - name: Deploy to Cloud Run Job
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
+          # Create the key.json file again for use during deployment
+          echo "${GCP_SA_KEY}" > /tmp/key.json
+          
+          # Set the environment variable to use this key
           gcloud run jobs deploy dlt-ingest-shopify-job \
             --image gcr.io/${GCP_PROJECT_ID}/dlt-shopify-ingest-image:latest \
             --region europe-west1 \
             --tasks 1 \
             --project ${GCP_PROJECT_ID} \
+            --set-env-vars GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json \
             --execute-now --wait

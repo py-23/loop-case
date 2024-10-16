@@ -59,8 +59,9 @@ jobs:
           sed -i "s|private_app_password = \"\"|private_app_password = \"${PRIVATE_APP_PASSWORD}\"|" .dlt/secrets.toml
           sed -i "s|access_token = \"\"|access_token = \"${ACCESS_TOKEN}\"|" .dlt/secrets.toml
           sed -i "s|client_email = \"\"|client_email = \"${CLIENT_EMAIL}\"|" .dlt/secrets.toml
-          # Insert the full private key content
-          sed -i "s|private_key = \"\"|private_key = \"${PRIVATE_KEY}\"|" .dlt/secrets.toml
+          # Properly insert the GCP private key, ensuring newlines are correctly formatted
+          PRIVATE_KEY_ESCAPED=$(echo "${PRIVATE_KEY}" | sed ':a;N;$!ba;s/\n/\\n/g')
+          sed -i "s|private_key = \"\"|private_key = \"${PRIVATE_KEY_ESCAPED}\"|" .dlt/secrets.toml
 
       # Step 8: Build and Push Docker image
       - name: Build and Push Docker image

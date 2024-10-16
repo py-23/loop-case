@@ -59,8 +59,8 @@ jobs:
           sed -i "s|private_app_password = \"\"|private_app_password = \"${PRIVATE_APP_PASSWORD}\"|" .dlt/secrets.toml
           sed -i "s|access_token = \"\"|access_token = \"${ACCESS_TOKEN}\"|" .dlt/secrets.toml
           sed -i "s|client_email = \"\"|client_email = \"${CLIENT_EMAIL}\"|" .dlt/secrets.toml
-          sed -i '/private_key = ""/d' .dlt/secrets.toml
-          echo -e "private_key = \"${PRIVATE_KEY}\"" >> .dlt/secrets.toml
+          # Properly insert the GCP private key
+          sed -i "s|private_key = \"\"|private_key = \"${PRIVATE_KEY}\"|" .dlt/secrets.toml
           echo "Contents of secrets.toml after update:"
           cat .dlt/secrets.toml
 

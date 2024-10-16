@@ -1,0 +1,12 @@
+
+version: 2
+
+models:
+  - name: mart_shopify_orders
+    description: "orders data tp for aggregated and enriched"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null

@@ -68,3 +68,18 @@ jobs:
             --tasks 1 \
             --project ${GCP_PROJECT_ID} \
             --execute-now --wait
+
+      # Step 8: Deploy to Google Cloud Run Job
+      - name: Deploy to Cloud Run Job
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          PRIVATE_APP_PASSWORD: ${{ secrets.PRIVATE_APP_PASSWORD }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          gcloud run jobs deploy dlt-ingest-shopify-job \
+            --image gcr.io/${GCP_PROJECT_ID}/dlt-shopify-ingest-image:latest \
+            --region europe-west1 \
+            --set-env-vars PRIVATE_APP_PASSWORD=${PRIVATE_APP_PASSWORD},ACCESS_TOKEN=${ACCESS_TOKEN},GCP_PROJECT_ID=${GCP_PROJECT_ID} \
+            --tasks 1 \
+            --project ${GCP_PROJECT_ID} \
+            --execute-now --wait

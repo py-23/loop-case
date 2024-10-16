@@ -11,6 +11,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the DBT project files into the working directory
 COPY . .
 
+# .dbt directory is also copied
+COPY .dbt/profiles.yml /root/.dbt/profiles.yml
+
 # Set environment variable for Google Cloud credentials (can be passed at runtime)
 ENV GOOGLE_APPLICATION_CREDENTIALS="/app/gcp_credentials.json"
 

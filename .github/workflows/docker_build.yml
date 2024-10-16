@@ -60,7 +60,7 @@ jobs:
           sed -i "s|client_email = \"\"|client_email = \"${CLIENT_EMAIL}\"|" .dlt/secrets.toml
           
           # Write the GCP service account key directly into the toml
-          echo -e "private_key = ${GCP_SA_KEY} >> .dlt/secrets.toml
+          echo -e "private_key = {GCP_SA_KEY}" >> .dlt/secrets.toml
 
       # Step 8: Build and Push Docker image
       - name: Build and Push Docker image

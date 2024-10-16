@@ -54,13 +54,14 @@ jobs:
           PRIVATE_APP_PASSWORD: ${{ secrets.PRIVATE_APP_PASSWORD }}
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
           sed -i "s|private_app_password = \"\"|private_app_password = \"${PRIVATE_APP_PASSWORD}\"|" .dlt/secrets.toml
           sed -i "s|access_token = \"\"|access_token = \"${ACCESS_TOKEN}\"|" .dlt/secrets.toml
           sed -i "s|client_email = \"\"|client_email = \"${CLIENT_EMAIL}\"|" .dlt/secrets.toml
           
           # Write the GCP service account key directly into the toml
-          echo -e "private_key = ${GCP_SA_KEY}" >> .dlt/secrets.toml
+          echo -e "private_key = ${PRIVATE_KEY}" >> .dlt/secrets.toml
 
       # Step 8: Build and Push Docker image
       - name: Build and Push Docker image

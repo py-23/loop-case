@@ -12,4 +12,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to start the container
-CMD ["python", "shopify_dlt_pipeline.py"]
+CMD ["python", "main.py"]

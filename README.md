@@ -61,7 +61,7 @@ Data profiling is enabled via Dataplex in Bigquery which gives a summary of each
 
 <h3>What is still to be implemented</h3>
 <p>1. Schema validation on ingestion</p>
-<p>1. Completed workflows in Github actions</p>
-<p>2. dbt model contracts and tests in CI</p>
-<p>1. Airflow cloud run operator and workflow</p>
-<p>1. Observability with Montecarlo/orchestra</p>
+<p>2. Completed workflows in Github actions</p>
+<p>3. dbt model contracts and tests in CI</p>
+<p>4. Airflow cloud run operator and workflow</p>
+<p>5. Observability with Montecarlo/orchestra</p>

@@ -40,9 +40,9 @@
 
 <h2>Solution architecture principles</h2>
 
-<p>Scalability of the solution: Cloud run allows for horizontal scaling since it is serverless. BigQuery allows for petabyte scale storage and scales as the data size increases.</p>
+<p>Scalability of the solution: Cloud run allows for horizontal scaling since it is serverless. BigQuery allows for petabyte scale storage and scales as the data size increases. Incremental loading is used in dlthub and dbt which is highly effective and scalable for ingesting data from shopify.</p>
 
-<p>Cost efficiency: Batch ingestion minimizes the API calls made. Using dlthub and dbt minimizes costs as they are open source or have free tiers.</p>
+<p>Cost efficiency: Batch ingestion minimizes the API calls made. Using dlthub and dbt minimizes costs as they are open source or have free tiers. Incremental loading ensures that cpu and storage is charged only for new or updated records.</p>
 
 <p>Flexibility: the architecture is flexible, supporting new data sources as needed. dbt models are modular and easily extendable, allowing for incremental improvements in the transformation process.</p>
 
@@ -52,7 +52,7 @@ Each layer of transformation in dbt builds upon the previous one, ensuring reusa
 </p>
 
 <p>Performance:
-BigQuery is partitioned by date and clustering by customer id, product type and other commonly used aggregations is in place to improve performance when accessing the data. BigQuery is a columnar storage option meaning it is efficient at retrieving column level data which is well suited to analytics cases as most often only some columns are used.</p>
+BigQuery is partitioned by date and clustering by customer id, product type and other commonly used aggregations is in place to improve performance when accessing the data. BigQuery is a columnar storage option meaning it is efficient at retrieving column level data which is well suited to analytics cases as most often only some columns are used. Incremental loading makes the data flow performant as only upserts are taken intp account post initial load.</p>
 
 <h2>Data quality</h2>
 

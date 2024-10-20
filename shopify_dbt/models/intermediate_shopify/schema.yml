@@ -1,21 +1,47 @@
-
 version: 2
 
 models:
   - name: int_order_line_items
-    description: "orders line items data to be aggregated and enriched"
+    description: "Intermediate model joining order line items with orders to calculate total sales and after-discount sales amounts."
     columns:
-      - name: id
-        description: "The primary key for this table"
-        data_tests:
+      - name: sales_item_id
+        description: "Primary key for the sales line item, sourced from stg_order_line_items."
+        tests:
           - unique
           - not_null
 
-  - name: int_orders
-    description: "orders data to be aggregated and enriched"
-    columns:
-      - name: id
-        description: "The primary key for this table"
-        data_tests:
-          - unique
+      - name: sales_quantity
+        description: "The quantity of items sold in a particular order."
+
+      - name: sales_price
+        description: "The price at which the item was sold, casted to FLOAT64 for calculations."
+
+      - name: sales_discount
+        description: "The total discount applied to the item, casted to FLOAT64 for calculations."
+
+      - name: total_sales_amount
+        description: "The total sales amount for a particular line item, calculated as sales_quantity * sales_price."
+        tests:
           - not_null
+          - positive_value
+
+      - name: after_discount_sales_amount
+        description: "The total sales amount after discount for the line item, calculated as total_sales_amount - sales_discount."
+        tests:
+          - not_null
+
+      - name: created_at
+        description: "The timestamp when the order was created, sourced from the orders table."
+
+      - name: currency
+        description: "The currency in which the sale was made, sourced from the orders table."
+
+      - name: customer_id
+        description: "The customer who placed the order, sourced from the orders table."
+
+sources:
+  - name: stg_order_line_items
+    description: "Staging table for order line items."
+
+  - name: int_orders
+    description: "Intermediate table for orders, containing customer and order details."

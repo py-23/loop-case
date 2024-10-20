@@ -2,7 +2,7 @@
 version: 2
 
 models:
-  - name: int_shopify_orders
+  - name: int_order_line_items
     description: "orders data tp for aggregated and enriched"
     columns:
       - name: id

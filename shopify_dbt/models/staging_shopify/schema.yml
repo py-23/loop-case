@@ -1,14 +1,19 @@
-
 version: 2
 
 models:
-  - name: stg_shopify_orders
-    description: "orders data to be cleaned"
+  - name: stg_order_line_items
+    description: "Cleaned orders data"
     columns:
-      - name: id
+      - name: sales_item_id
         description: "The primary key for this table"
-        data_tests:
+        tests:
           - unique
           - not_null
-
-
+      - name: sales_quantity
+        description: "The quantity of items sold"
+      - name: product_name
+        description: "Name of the product"
+      - name: sales_price
+        description: "Price at which the item was sold"
+      - name: sales_discount
+        description: "Total discount applied to the item"

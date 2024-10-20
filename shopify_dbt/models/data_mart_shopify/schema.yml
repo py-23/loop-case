@@ -2,7 +2,7 @@
 version: 2
 
 models:
-  - name: mart_shopify_orders
+  - name: fct_sales
     description: "orders data tp for aggregated and enriched"
     columns:
       - name: id

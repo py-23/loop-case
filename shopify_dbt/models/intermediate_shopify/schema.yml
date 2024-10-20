@@ -3,7 +3,16 @@ version: 2
 
 models:
   - name: int_order_line_items
-    description: "orders data tp for aggregated and enriched"
+    description: "orders line items data to be aggregated and enriched"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: int_orders
+    description: "orders data to be aggregated and enriched"
     columns:
       - name: id
         description: "The primary key for this table"

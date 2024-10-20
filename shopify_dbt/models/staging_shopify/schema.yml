@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_order_line_items
-    description: "Cleaned orders data"
+    description: "Cleaned order line items data"
     columns:
       - name: sales_item_id
         description: "The primary key for this table"
@@ -17,3 +17,11 @@ models:
         description: "Price at which the item was sold"
       - name: sales_discount
         description: "Total discount applied to the item"
+  - name: stg_orders
+    description: "Cleaned orders data"
+    columns:
+      - name: order_id
+        description: "The primary key for this table"
+        tests:
+          - unique
+          - not_null

@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental',
+    unique_key='sales_item_id'
+) }}
 
 WITH raw_order_line_items AS (
     SELECT
@@ -29,3 +32,7 @@ SELECT
     *
 FROM deduplicated_order_line_items
 WHERE row_num = 1  -- Keep only the first occurrence
+
+{% if is_incremental() %}
+AND sales_item_id NOT IN (SELECT sales_item_id FROM {{ this }})
+{% endif %}

@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental',
+    unique_key='order_id'
+) }}
 
 WITH raw_orders AS (
     SELECT

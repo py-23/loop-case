@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental',
+    unique_key='sales_item_id'
+) }}
 
 WITH order_line_items AS (
     SELECT *

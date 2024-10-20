@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+    materialized='incremental',
+    unique_key='sales_item_id'
+) }}
 
 With sales as(
     select
